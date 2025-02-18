@@ -29,7 +29,7 @@ app.use('/api/auth', authRoutes);
 // app.use(verifyJWT);
 
 // Movies
-app.use('/discover/movies', moviesRoutes);
+app.use('/movies', moviesRoutes);
 
 // Escuchar puerto
 mongoose.connection.once('open', () => {

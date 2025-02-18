@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { discoverMovies } from "../controllers/movies.controller";
+import { discoverMovies, searchMovies } from "../controllers/movies.controller";
 const router = Router();
 
-router.get('/', discoverMovies);
+router.get('/discover', discoverMovies);
+router.get('/search', searchMovies);
 
 export default router;
