@@ -4,7 +4,7 @@ import express from 'express';
 import cors from 'cors';
 import corsOptions from './config/corsOptions';
 import cookieParser from 'cookie-parser';
-import connectDatabse from './config/dbConnect';
+import connectDatabase from './config/dbConnect';
 import mongoose from 'mongoose';
 import { default as authRoutes } from './routes/api/auth.routes';
 import { verifyJWT } from './middlewares/verifyJWT';
@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 3500;
 
 // Conectar Base de Datos
-connectDatabse();
+connectDatabase();
 
 // Middlewares
 app.use(cors(corsOptions));
@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/auth', authRoutes);
 
 // Verify JWT
-// app.use(verifyJWT);
+app.use(verifyJWT);
 
 // Movies
 app.use('/movies', moviesRoutes);

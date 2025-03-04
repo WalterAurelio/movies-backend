@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { registerUser, login, logout, refresh } from "../../controllers/auth.controller";
-import { validateRegister } from "../../middlewares/zValidateRegister";
-import { validateLogin } from "../../middlewares/zValidateLogin";
+import { validateRegister } from "../../middlewares/validateRegister";
+import { validateLogin } from "../../middlewares/validateLogin";
 const router = Router();
 
 router.post('/register', validateRegister, registerUser);

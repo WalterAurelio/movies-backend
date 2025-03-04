@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Request, Response, NextFunction } from "express";
+import { ApiResponse } from "../interfaces/movies.interfaces";
 
 const RegisterBody = z.object({
   firstname: z.string({ invalid_type_error: 'El formato del nombre ingresado es inválido.', required_error: 'El campo nombre es obligatorio.' }).min(3, 'El nombre debe tener al menos 3 caracteres.'),
@@ -10,11 +11,11 @@ const RegisterBody = z.object({
 
 type TRegisterBody = z.infer<typeof RegisterBody>;
 
-export const validateRegister = (req: Request<{}, {}, TRegisterBody>, res: Response, next: NextFunction) => {
+export const validateRegister = (req: Request<{}, {}, TRegisterBody>, res: Response<ApiResponse>, next: NextFunction) => {
   const result = RegisterBody.safeParse(req.body);
 
   if (!result.success) {
-    return res.status(400).json({ errors: result.error.errors });
+    return res.status(400).json({ success: false, errors: result.error.errors });
   }
   next();
 }

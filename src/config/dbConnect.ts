@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const DATABASE_URI = process.env.DATABASE_URI;
 
-const connectDatabse = async () => {
+const connectDatabase = async () => {
   try {
     await mongoose.connect(DATABASE_URI!, {
       dbName: 'MoviesAppDB'
@@ -12,4 +12,4 @@ const connectDatabse = async () => {
   }
 };
 
-export default connectDatabse;
+export default connectDatabase;

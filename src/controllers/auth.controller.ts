@@ -2,7 +2,7 @@ import User from "../models/User";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { Request, Response } from "express";
-import { RegisterBody, LoginBody, RequestCookies } from "../interfaces/interfaces";
+import { RegisterBody, LoginBody, RequestCookies } from "../interfaces/auth.interfaces";
 
 export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Response) => {
   const { firstname, lastname, email, password } = req.body;
@@ -40,7 +40,7 @@ export const login = async (req: Request<{}, {}, LoginBody>, res: Response) => {
     const accessToken = jwt.sign(
       { email: foundUser.email, roles },
       process.env.ACCESS_TOKEN_SECRET!,
-      { expiresIn: '1m' }
+      { expiresIn: '10m' }
     );
     const newRefreshToken = jwt.sign(
       { email: foundUser.email },
@@ -122,7 +122,7 @@ export const refresh = async (req: Request, res: Response) => {
       const accessToken = jwt.sign(
         { email: foundUser.email, roles },
         process.env.ACCESS_TOKEN_SECRET!,
-        { expiresIn: '1m' }
+        { expiresIn: '10m' }
       );
       const newRefreshToken = jwt.sign(
         { email: foundUser.refreshToken },
