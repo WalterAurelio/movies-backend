@@ -34,6 +34,7 @@ export const getMovieDetailsById = async (req: Request<MovieDetailsPathParams, {
         append_to_response: req.query?.append_to_response
       } as MovieDetailsQueryParams
     });
+    // const videos = await axiosClient.get(`movie/${movie_id}/videos`); //
     res.json({ success: true, data: response.data });
   } catch (error) {
     const message = error instanceof Error ? `Error en la petición. ${error.message}` : 'Error en la petición.';
@@ -97,7 +98,17 @@ export const deleteFavoriteMovie = async (req: Request<{}, {}, DeleteFavMovieBod
     res.status(500).json({ success: false, message });
   }
 
-}
+};
+
+export const getMovieGenres = async (req: Request, res: Response<ApiResponse>) => {
+  try {
+    const response = await axiosClient.get('/genre/movie/list');
+    res.json({ success: true, data: response.data });
+  } catch (error) {
+    const message = error instanceof Error ? `Error en la petición. ${error.message}` : 'Error en la petición';
+    res.status(500).json({ success: false, message });
+  }
+};
 
 export const search = async (req: Request<{}, {}, {}, SearchQueryParams>, res: Response<ApiResponse>) => {
   const { query, page } = req.query;

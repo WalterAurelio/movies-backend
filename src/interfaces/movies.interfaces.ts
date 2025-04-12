@@ -1,5 +1,4 @@
 import { paths } from '../schemas/schema';
-import { ZodIssue } from 'zod';
 
 // My Api Response
 export interface ApiResponse {

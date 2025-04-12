@@ -9,12 +9,15 @@ import mongoose from 'mongoose';
 import { default as authRoutes } from './routes/api/auth.routes';
 import { verifyJWT } from './middlewares/verifyJWT';
 import { default as moviesRoutes } from './routes/movies.routes';
+import { credentials } from './middlewares/credentials';
 
 const app = express();
 const PORT = process.env.PORT || 3500;
 
 // Conectar Base de Datos
 connectDatabase();
+
+app.use(credentials);
 
 // Middlewares
 app.use(cors(corsOptions));

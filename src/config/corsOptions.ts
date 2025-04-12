@@ -9,6 +9,7 @@ const corsOptions: CorsOptions = {
       callback(new Error('No permitido por CORS.'));
     }
   },
+  credentials: true,
   optionsSuccessStatus: 200
 };
 
