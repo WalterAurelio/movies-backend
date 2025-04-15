@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { discover, getMovieDetailsById, addFavoriteMovie, getFavoriteMovies, deleteFavoriteMovie, search, getMovieGenres } from '../controllers/movies.controller';
+import { discover, getMovieDetailsById, addFavoriteMovie, getFavoriteMovies, deleteFavoriteMovie, search, getMovieGenres, getMovieVideosById } from '../controllers/movies.controller';
 const router = Router();
 
 router.get('/discover', discover('/discover/movie'));
@@ -11,5 +11,6 @@ router.delete('/favorites', deleteFavoriteMovie);
 router.get('/search', search);
 
 router.get('/genres', getMovieGenres);
+router.get('/videos', getMovieVideosById);
 
 export default router;

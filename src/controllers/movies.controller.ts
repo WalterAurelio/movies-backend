@@ -42,6 +42,18 @@ export const getMovieDetailsById = async (req: Request<MovieDetailsPathParams, {
   }
 };
 
+export const getMovieVideosById = async (req: Request<MovieDetailsPathParams>, res: Response<ApiResponse>) => {
+  const { movie_id } = req.params;
+
+  try {
+    const response = await axiosClient.get(`movie/${movie_id}/videos`);
+    res.json({ success: true, data: response.data });
+  } catch (error) {
+    const message = error instanceof Error ? `Error en la petición. ${error.message}` : 'Error en la petición.';
+    res.status(500).json({ success: false, message });
+  }
+};
+
 export const addFavoriteMovie = async (req: Request<{}, {}, AddFavMovieBody>, res: Response<ApiResponse>) => {
   const { id } = req.body;
   const email = req.email;

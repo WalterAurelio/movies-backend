@@ -88,6 +88,8 @@ export const logout = async (req: Request, res: Response) => {
 export const refresh = async (req: Request, res: Response) => {
   const cookies: RequestCookies = req.cookies;
 
+  console.log('Soy request cookies', req.cookies);
+
   if (!cookies?.jwt) return res.status(401).json({ message: 'No se recibió una cookie' });
   const refreshToken = cookies.jwt;
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'lax', secure: false });
@@ -129,6 +131,8 @@ export const refresh = async (req: Request, res: Response) => {
         process.env.REFRESH_TOKEN_SECRET!,
         { expiresIn: '1d' }
       );
+
+      console.log('Soy la nueva refreshToken', newRefreshToken)
 
       foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
       await foundUser.save();
