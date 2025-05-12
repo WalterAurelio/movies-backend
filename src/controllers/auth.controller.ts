@@ -9,7 +9,7 @@ export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Resp
 
   try {
     const duplicated = await User.findOne({ email });
-    if (duplicated) return res.status(409).json({ message: 'Ya existe un usuario registrado con este correo electrónico' });
+    if (duplicated) return res.status(409).json({ message: 'Ya existe un usuario registrado con este correo electrónico.' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({
@@ -18,7 +18,7 @@ export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Resp
       email,
       password: hashedPassword
     });
-    res.status(201).json({ message: 'Usuario registrado con éxito' });
+    res.status(201).json({ message: 'Usuario registrado con éxito.' });
   } catch (error) {
     const message = error instanceof Error ? `Error en la creación del usuario. ${error.message}` : 'Error en la creación del usuario.';
     res.status(500).json({ message });

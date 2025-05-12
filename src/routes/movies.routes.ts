@@ -11,6 +11,6 @@ router.delete('/favorites', deleteFavoriteMovie);
 router.get('/search', search);
 
 router.get('/genres', getMovieGenres);
-router.get('/videos', getMovieVideosById);
+router.get('/videos/:movie_id', getMovieVideosById);
 
 export default router;

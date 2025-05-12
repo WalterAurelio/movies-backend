@@ -2,9 +2,18 @@ import { z } from 'zod';
 import { Request, Response, NextFunction } from 'express';
 import { ApiResponse } from '../interfaces/movies.interfaces';
 
+const typeErrorMsg = 'El valor ingresado no es válido.';
+const requiredErrorMsg = 'Este campo es obligatorio.';
+
 const LoginBody = z.object({
-  email: z.string({ required_error: 'El campo correo electrónico es obligatorio.' }).email({ message: 'El formato del correo electrónico ingresado es inválido.' }),
-  password: z.string({ required_error: 'El campo contraseña es obligatorio.' }),
+  email: z.string({
+    invalid_type_error: typeErrorMsg,
+    required_error: requiredErrorMsg
+  }).email({ message: typeErrorMsg }),
+  password: z.string({
+    invalid_type_error: typeErrorMsg,
+    required_error: requiredErrorMsg
+  }),
 });
 
 type TLoginBody = z.infer<typeof LoginBody>;

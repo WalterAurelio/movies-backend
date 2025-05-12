@@ -1,12 +1,31 @@
 import { z } from "zod";
 import { Request, Response, NextFunction } from "express";
 import { ApiResponse } from "../interfaces/movies.interfaces";
+import validationMessages from '../utils/validationMessages';
+
+const { requiredMsg, invalidMsg, minCharactersMsg, email, password,  } = validationMessages;
+
+// const typeErrorMsg = 'El valor ingresado no es válido.';
+// const requiredErrorMsg = 'Este campo es obligatorio.';
+// const minCharactersMsg = (n: number) => `Este campo debe tener al menos ${n} caracteres.`;
 
 const RegisterBody = z.object({
-  firstname: z.string({ invalid_type_error: 'El formato del nombre ingresado es inválido.', required_error: 'El campo nombre es obligatorio.' }).min(3, 'El nombre debe tener al menos 3 caracteres.'),
-  lastname: z.string({ invalid_type_error: 'El formato del apellido ingresado es inválido.', required_error: 'El campo apellido es obligatorio.' }).min(3, 'El apellido debe tener al menos 3 caracteres.'),
-  email: z.string({ required_error: 'El campo correo electrónico es obligatorio.' }).email({ message: 'El formato del correo electrónico ingresado es inválido.' }),
-  password: z.string({ required_error: 'El campo contraseña es obligatorio.' }).min(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
+  firstname: z.string({
+    invalid_type_error: invalidMsg,
+    required_error: requiredMsg
+  }).min(3, minCharactersMsg(3)),
+  lastname: z.string({
+    invalid_type_error: invalidMsg,
+    required_error: requiredMsg
+  }).min(3, minCharactersMsg(3)),
+  email: z.string({
+    invalid_type_error: invalidMsg,
+    required_error: requiredMsg
+  }).email({ message: email.invalidMsg }),
+  password: z.string({
+    invalid_type_error: invalidMsg,
+    required_error: requiredMsg
+  }).min(5, password.minCharactersMsg(5))
 });
 
 type TRegisterBody = z.infer<typeof RegisterBody>;
@@ -18,4 +37,4 @@ export const validateRegister = (req: Request<{}, {}, TRegisterBody>, res: Respo
     return res.status(400).json({ success: false, errors: result.error.errors });
   }
   next();
-}
+};
