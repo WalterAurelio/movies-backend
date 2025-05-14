@@ -1,15 +1,16 @@
-import User from "../models/User";
+import User from '../models/User';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { Request, Response } from "express";
-import { RegisterBody, LoginBody, RequestCookies } from "../interfaces/auth.interfaces";
+import { Request, Response } from 'express';
+import { RegisterBody, LoginBody, RequestCookies } from '../interfaces/auth.interfaces';
+import { ApiResponse } from '../interfaces/movies.interfaces';
 
-export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Response) => {
+export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Response<ApiResponse>) => {
   const { firstname, lastname, email, password } = req.body;
 
   try {
     const duplicated = await User.findOne({ email });
-    if (duplicated) return res.status(409).json({ message: 'Ya existe un usuario registrado con este correo electrónico.' });
+    if (duplicated) return res.status(409).json({ success: false, message: 'Ya existe un usuario registrado con este correo electrónico.' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({
@@ -18,27 +19,27 @@ export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Resp
       email,
       password: hashedPassword
     });
-    res.status(201).json({ message: 'Usuario registrado con éxito.' });
+    res.status(201).json({ success: true, message: 'Usuario registrado con éxito.' });
   } catch (error) {
     const message = error instanceof Error ? `Error en la creación del usuario. ${error.message}` : 'Error en la creación del usuario.';
-    res.status(500).json({ message });
+    res.status(500).json({ success: false, message });
   }
-};
+}; // REVISADO
 
-export const login = async (req: Request<{}, {}, LoginBody>, res: Response) => {
+export const login = async (req: Request<{}, {}, LoginBody>, res: Response<ApiResponse>) => {
   const { email, password } = req.body;
   const cookies: RequestCookies = req.cookies;
 
   try {
     const foundUser = await User.findOne({ email });
-    if (!foundUser) return res.status(401).json({ message: 'No existe un usuario registrado con este email.' });
-  
+    if (!foundUser) return res.status(401).json({ success: false, message: 'No existe un usuario registrado con este correo electrónico.' });
+
     const validPassword = await bcrypt.compare(password, foundUser.password);
-    if (!validPassword) return res.status(401).json({ message: 'La contraseña ingresada es incorrecta.' });
-  
-    const roles = Object.values(foundUser.roles);
+    if (!validPassword) return res.status(401).json({ success: false, message: 'La contraseña ingresada es incorrecta.' });
+
+    // const roles = Object.values(foundUser.roles);
     const accessToken = jwt.sign(
-      { email: foundUser.email, roles },
+      { email: foundUser.email, /* roles */ },
       process.env.ACCESS_TOKEN_SECRET!,
       { expiresIn: '10m' }
     );
@@ -47,9 +48,9 @@ export const login = async (req: Request<{}, {}, LoginBody>, res: Response) => {
       process.env.REFRESH_TOKEN_SECRET!,
       { expiresIn: '1d' }
     );
-  
+
     let newRefreshTokenArray = !cookies?.jwt ? foundUser.refreshToken : foundUser.refreshToken?.filter(rt => rt !== cookies.jwt);
-  
+
     if (cookies.jwt) {
       const refreshToken = cookies.jwt;
       const foundUser = await User.findOne({ refreshToken });
@@ -62,14 +63,14 @@ export const login = async (req: Request<{}, {}, LoginBody>, res: Response) => {
     foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
     await foundUser.save();
     res.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'lax', secure: false, maxAge: 1000 * 60 * 60 * 24 });
-    res.json({ accessToken, roles });
+    res.json({ success: true, accessToken });
   } catch (error) {
     const message = error instanceof Error ? `Error en el inicio de sesión. ${error.message}` : 'Error en el inicio de sesión.';
-    res.status(500).json({ message });
+    res.status(500).json({ success: false, message });
   }
-};
+}; // REVISADO
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (req: Request, res: Response<ApiResponse>) => {
   const cookies: RequestCookies = req.cookies;
 
   if (!cookies?.jwt) return res.sendStatus(204);
@@ -83,14 +84,12 @@ export const logout = async (req: Request, res: Response) => {
   foundUser.refreshToken = foundUser.refreshToken.filter(rt => rt !== refreshToken);
   await foundUser.save();
   res.sendStatus(204);
-};
+}; // REVISADO
 
-export const refresh = async (req: Request, res: Response) => {
+export const refresh = async (req: Request, res: Response<ApiResponse>) => {
   const cookies: RequestCookies = req.cookies;
 
-  console.log('Soy request cookies', req.cookies);
-
-  if (!cookies?.jwt) return res.status(401).json({ message: 'No se recibió una cookie' });
+  if (!cookies?.jwt) return res.sendStatus(401);
   const refreshToken = cookies.jwt;
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'lax', secure: false });
 
@@ -132,15 +131,13 @@ export const refresh = async (req: Request, res: Response) => {
         { expiresIn: '1d' }
       );
 
-      console.log('Soy la nueva refreshToken', newRefreshToken)
-
       foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
       await foundUser.save();
       res.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'lax', secure: false, maxAge: 1000 * 60 * 60 * 24 });
-      res.json({ accessToken, roles });
+      res.json({ success: true, accessToken });
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error desconocido.';
-    res.status(500).json({ message });
+    const message = error instanceof Error ? `Error al refrescar token. ${error.message}` : 'Error al refrescar token.';
+    res.status(500).json({ success: false, message });
   }
-};
+}; // REVISADO

@@ -1,11 +1,13 @@
 import { paths } from '../schemas/schema';
+import { ZodIssue } from 'zod';
 
 // My Api Response
 export interface ApiResponse {
   success: boolean;
-  data?: unknown;
   message?: string;
-  errors?: unknown;
+  data?: object;
+  accessToken?: string;
+  errors?: ZodIssue[];
 }
 
 // Movies Types

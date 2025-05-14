@@ -34,7 +34,6 @@ export const getMovieDetailsById = async (req: Request<MovieDetailsPathParams, {
         append_to_response: req.query?.append_to_response
       } as MovieDetailsQueryParams
     });
-    // const videos = await axiosClient.get(`movie/${movie_id}/videos`); //
     res.json({ success: true, data: response.data });
   } catch (error) {
     const message = error instanceof Error ? `Error en la petición. ${error.message}` : 'Error en la petición.';
@@ -62,7 +61,6 @@ export const addFavoriteMovie = async (req: Request<{}, {}, AddFavMovieBody>, re
     const foundUser = await User.findOne({ email });
     if (!foundUser) return res.sendStatus(401);
 
-    // Chequeamos si la película ya pertenece a favoritos
     const alreadyInFavorites = foundUser.favorites.movies.some(movie => movie.id === id);
     if (alreadyInFavorites) return res.status(409).json({ success: false, message: 'La película ya pertenece a su lista de favoritos.' });
 

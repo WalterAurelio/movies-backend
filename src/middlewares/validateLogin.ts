@@ -1,19 +1,21 @@
 import { z } from 'zod';
 import { Request, Response, NextFunction } from 'express';
 import { ApiResponse } from '../interfaces/movies.interfaces';
+import validationMessages from '../utils/validationMessages';
 
-const typeErrorMsg = 'El valor ingresado no es válido.';
-const requiredErrorMsg = 'Este campo es obligatorio.';
+const { invalidMsg, requiredMsg, email } = validationMessages;
 
 const LoginBody = z.object({
-  email: z.string({
-    invalid_type_error: typeErrorMsg,
-    required_error: requiredErrorMsg
-  }).email({ message: typeErrorMsg }),
+  email: z
+    .string({
+      invalid_type_error: invalidMsg,
+      required_error: requiredMsg
+    })
+    .email({ message: email.invalidMsg }),
   password: z.string({
-    invalid_type_error: typeErrorMsg,
-    required_error: requiredErrorMsg
-  }),
+    invalid_type_error: invalidMsg,
+    required_error: requiredMsg
+  })
 });
 
 type TLoginBody = z.infer<typeof LoginBody>;
@@ -25,4 +27,4 @@ export const validateLogin = (req: Request<{}, {}, TLoginBody>, res: Response<Ap
     return res.status(400).json({ success: false, errors: result.error.errors });
   }
   next();
-}
+};
