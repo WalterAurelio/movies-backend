@@ -4,6 +4,19 @@ import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { RegisterBody, LoginBody, RequestCookies } from '../interfaces/auth.interfaces';
 import { ApiResponse } from '../interfaces/movies.interfaces';
+import { Database } from '../types/database';
+
+export const registerUser_2 = (database: Database) => {
+  return async (req: Request<{}, {}, RegisterBody>, res: Response<ApiResponse>) => {
+    const { firstname, lastname, email, password } = req.body;
+
+    try {
+      const duplicated = await database.getUserByEmail(email);
+    } catch (error) {
+      
+    }
+  }
+};
 
 export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Response<ApiResponse>) => {
   const { firstname, lastname, email, password } = req.body;

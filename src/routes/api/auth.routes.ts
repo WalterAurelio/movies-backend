@@ -2,11 +2,17 @@ import { Router } from "express";
 import { registerUser, login, logout, refresh } from "../../controllers/auth.controller";
 import { validateRegister } from "../../middlewares/validateRegister";
 import { validateLogin } from "../../middlewares/validateLogin";
-const router = Router();
+import { Database } from '../../types/database';
 
-router.post('/register', validateRegister, registerUser);
-router.post('/login', validateLogin, login);
-router.get('/logout', logout);
-router.get('/refresh-token', refresh);
+export default function(database: Database) {
+  const router = Router();
 
-export default router;
+  router.post('/register', validateRegister, registerUser);
+  // router.post('/login', validateLogin, login);
+  // router.get('/logout', logout);
+  // router.get('/refresh-token', refresh);
+
+  return router;
+}
+
+// export default router;
