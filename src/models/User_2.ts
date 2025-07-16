@@ -18,6 +18,6 @@ const userSchema = new Schema<IUser>({  /* se recomienda pasarle siempre un gene
   password: { type: String, required: true }
 }, { timestamps: true });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('Usuario', userSchema);
 
 export default User;

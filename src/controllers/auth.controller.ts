@@ -8,12 +8,19 @@ import { Database } from '../types/database';
 
 export const registerUser_2 = (database: Database) => {
   return async (req: Request<{}, {}, RegisterBody>, res: Response<ApiResponse>) => {
-    const { firstname, lastname, email, password } = req.body;
+    const { email } = req.body;
 
     try {
       const duplicated = await database.getUserByEmail(email);
+      if (duplicated) {
+        res.status(409).json({ success: false, message: 'Ya existe un usuario registrado con este email' });
+        return;
+      }
+      const userId = await database.registerUser(req.body);
+      res.status(201).json({ success: true, message: 'Usuario registrado con éxito', data: { userId } });
     } catch (error) {
-      
+      const message = error instanceof Error ? `Error en la creación del usuario. ${error.message}` : 'Error en la creación del usuario.';
+      res.status(500).json({ success: false, message });
     }
   }
 };

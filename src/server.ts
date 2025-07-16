@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+/* import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 import cors from 'cors';
@@ -35,6 +35,24 @@ app.use(verifyJWT);
 app.use('/movies', moviesRoutes);
 
 // Escuchar puerto
+mongoose.connection.once('open', () => {
+  console.log('Conectado exitosamente a MongoDB.');
+  app.listen(PORT, () => {
+    console.log(`Servidor escuchando en el puerto ${PORT}...`);
+  })
+}); */
+import dotenv from 'dotenv';
+dotenv.config();
+import mongoose from 'mongoose';
+import connectDatabase from './config/dbConnect';
+import makeApp from './app';
+import { mongoDatabase } from './db/mongoDatabase';
+
+const app = makeApp(mongoDatabase);
+const PORT = process.env.PORT || 3500;
+
+connectDatabase();
+
 mongoose.connection.once('open', () => {
   console.log('Conectado exitosamente a MongoDB.');
   app.listen(PORT, () => {
