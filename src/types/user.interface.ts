@@ -1,8 +1,8 @@
 /*
-  esta es nuestra interface "pura" de TypeScript que usaremos para normalizar los User que provengan de cualquier
-  base de datos;
-  es decir, cualquier mapper que interactúe DIRECTAMENTE con la respuesta pura de la base de datos deberá retornar
-  un objeto con esta estructura (interface);
+  esta es nuestra interface "pura" (entidad interna) de TypeScript que usaremos para normalizar los User que provengan de
+  cualquier base de datos;
+  es decir, cualquier mapper (DAO) que interactúe DIRECTAMENTE con la respuesta pura de la base de datos deberá RETORNAR
+  UN OBJETO CON ESTA ESTRUCTURA (interface);
   a partir de esta interface es que definiremos los DTOs que enviaremos al cliente;
 */
 

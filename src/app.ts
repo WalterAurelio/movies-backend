@@ -1,12 +1,10 @@
 import express from 'express';
-import authRouter from './routes/api/auth.routes';
-import { Database } from './types/database';
+import authRoutes from './routes/api/auth.routes';
 
-export default function(database: Database) {
-  const app = express();
-  app.use(express.json());
+const app = express();
+app.use(express.json());
 
-  app.use('/api/auth', authRouter(database));
+// RUTAS
+app.use('/api/auth', authRoutes);
 
-  return app;
-}
+export default app;

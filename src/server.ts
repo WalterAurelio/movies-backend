@@ -45,10 +45,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 import mongoose from 'mongoose';
 import connectDatabase from './config/dbConnect';
-import makeApp from './app';
-import { mongoDatabase } from './db/mongoDatabase';
+import app from './app';
 
-const app = makeApp(mongoDatabase);
 const PORT = process.env.PORT || 3500;
 
 connectDatabase();

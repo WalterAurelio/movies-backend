@@ -5,27 +5,21 @@ import { Request, Response } from 'express';
 import { RegisterBody, LoginBody, RequestCookies } from '../interfaces/auth.interfaces';
 import { ApiResponse } from '../interfaces/movies.interfaces';
 import { Database } from '../types/database';
+import userService from '../services/user.service';
 
-export const registerUser_2 = (database: Database) => {
-  return async (req: Request<{}, {}, RegisterBody>, res: Response<ApiResponse>) => {
-    const { email } = req.body;
+export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Response<ApiResponse>) => {
+  const { email } = req.body;
 
-    try {
-      const duplicated = await database.getUserByEmail(email);
-      if (duplicated) {
-        res.status(409).json({ success: false, message: 'Ya existe un usuario registrado con este email' });
-        return;
-      }
-      const userId = await database.registerUser(req.body);
-      res.status(201).json({ success: true, message: 'Usuario registrado con éxito', data: { userId } });
-    } catch (error) {
-      const message = error instanceof Error ? `Error en la creación del usuario. ${error.message}` : 'Error en la creación del usuario.';
-      res.status(500).json({ success: false, message });
-    }
+  try {
+    const newUser = await userService.registerUser(req.body);
+    res.json({ success: true, data: newUser });
+  } catch (error) {
+    const message = error instanceof Error ? `Error en la creación del usuario. ${error.message}` : 'Error en la creación del usuario.';
+    res.status(500).json({ success: false, message });
   }
 };
 
-export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Response<ApiResponse>) => {
+export const registerUser_2 = async (req: Request<{}, {}, RegisterBody>, res: Response<ApiResponse>) => {
   const { firstname, lastname, email, password } = req.body;
 
   try {
