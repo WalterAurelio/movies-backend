@@ -3,7 +3,6 @@ import { ZodIssue } from 'zod';
 
 // My Api Response
 export interface ApiResponse {
-  success: boolean;
   message?: string;
   data?: object;
   accessToken?: string;
