@@ -5,14 +5,16 @@ import { Request, Response } from 'express';
 import { RegisterBody, LoginBody, RequestCookies } from '../interfaces/auth.interfaces';
 import { ApiResponse } from '../interfaces/movies.interfaces';
 import userService from '../services/user.service';
+import { ERROR_MESSAGES } from '../utils/errorMessages';
+import { SUCCESS_MESSAGES } from '../utils/successMessages';
 
 export const registerUser = async (req: Request<{}, {}, RegisterBody>, res: Response<ApiResponse>) => {
   const { email } = req.body;
   try {
     const duplicated = await userService.getUserByEmail(email);
-    if (duplicated) return res.status(409).json({ message: 'Ya existe un usuario registrado con este email.' });
+    if (duplicated) return res.status(409).json({ message: ERROR_MESSAGES.USER.ALREADY_EXISTS });
     const userResponseDTO = await userService.registerUser(req.body);
-    res.json({ message: 'Usuario registrado exitosamente.', data: userResponseDTO });
+    res.json({ message: SUCCESS_MESSAGES.USER.CREATED, data: userResponseDTO });
   } catch (error) {
     const message = error instanceof Error ? `Error en la creación del usuario. ${error.message}` : 'Error en la creación del usuario.';
     res.status(500).json({ message });
