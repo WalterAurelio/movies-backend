@@ -16,8 +16,20 @@ export interface IUserController {
 export default function(userService: IUserService): IUserController {
   return {
     registerUser: async (req, res) => {
-      const userResponseDTO = await userService.registerUser(req.body);
-      res.json({ data: userResponseDTO });
+      const { email } = req.body;
+
+      try {
+        const duplicated = await userService.getUserByEmail(email);
+        if (duplicated) {
+          res.sendStatus(409);
+          return;
+        }
+        const userResponseDTO = await userService.registerUser(req.body);
+        res.json({ data: userResponseDTO });
+      } catch (error) {
+        res.sendStatus(500);
+        return;
+      }
     }
   }
 }
