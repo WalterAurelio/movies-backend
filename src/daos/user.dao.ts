@@ -1,7 +1,12 @@
+import { ICreateUserDTO } from '../dtos/CreateUserDTO';
 import { IUserCore } from '../entities/User';
 import User from '../models/User_2';
 import UserEntity from '../entities/User';
-import { ICreateUserDTO } from '../dtos/CreateUserDTO'
+
+export interface IUserDAO {
+  createUser: (user: ICreateUserDTO) => Promise<IUserCore>;
+  getUserByEmail: (email: string) => Promise<IUserCore | null>;
+}
 
 const createUser = async (user: ICreateUserDTO): Promise<IUserCore> => {
   const newUserRaw = await User.create(user);
@@ -10,10 +15,7 @@ const createUser = async (user: ICreateUserDTO): Promise<IUserCore> => {
 
 const getUserByEmail = async (email: string): Promise<IUserCore | null> => {
   const userRaw = await User.findOne({ email });
-  if (!userRaw) {
-    return null;
-  }
-  return new UserEntity(userRaw);
+  return userRaw ? new UserEntity(userRaw) : null;
 };
 
 export default {

@@ -49,11 +49,11 @@ import app from './app';
 
 const PORT = process.env.PORT || 3500;
 
-connectDatabase();
+// connectDatabase();
 
-mongoose.connection.once('open', () => {
-  console.log('Conectado exitosamente a MongoDB.');
-  app.listen(PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${PORT}...`);
-  })
-});
+// mongoose.connection.once('open', () => {
+//   console.log('Conectado exitosamente a MongoDB.');
+//   app.listen(PORT, () => {
+//     console.log(`Servidor escuchando en el puerto ${PORT}...`);
+//   })
+// });

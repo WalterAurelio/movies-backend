@@ -1,15 +1,10 @@
-import { Router } from "express";
-import { registerUser, login, logout, refresh } from "../../controllers/auth.controller";
-import { validateRegister } from "../../middlewares/validateRegister";
-import { validateLogin } from "../../middlewares/validateLogin";
+import { Router } from 'express';
+import { IUserController } from '../../controllers/auth.controller';
 
-// router.post('/register', validateRegister, registerUser);
-// router.post('/login', validateLogin, login);
-// router.get('/logout', logout);
-// router.get('/refresh-token', refresh);
+export default function(controller: IUserController) {
+  const router = Router();
+  
+  router.post('/register', controller.registerUser);
 
-const router = Router();
-
-router.post('/register', registerUser);
-
-export default router;
+  return router;
+}

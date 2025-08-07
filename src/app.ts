@@ -1,10 +1,12 @@
 import express from 'express';
-import authRoutes from './routes/api/auth.routes';
+import { IUserController } from './controllers/auth.controller';
+import router from './routes/api/auth.routes';
 
-const app = express();
-app.use(express.json());
+export default function(controller: IUserController) {
+  const app = express();
+  app.use(express.json());
 
-// RUTAS
-app.use('/api/auth', authRoutes);
+  app.use('/api/auth', router(controller));
 
-export default app;
+  return app;
+}

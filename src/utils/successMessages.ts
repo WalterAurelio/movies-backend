@@ -6,6 +6,6 @@ export const SUCCESS_MESSAGES = {
   },
   AUTH: {
     LOGGED_IN: 'Sesión iniciada exitosamente.',
-    LOGGED_OUT: 'Sesión cerrada exitosamente.'
+    LOGGED_OUT: 'Sesión finalizada exitosamente.'
   }
 };
